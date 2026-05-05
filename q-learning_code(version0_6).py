@@ -10,7 +10,7 @@ class grid():
         self.re=10 #Δηλώνουμε την τιμή της αμοιβής του στόχου 
         self.pu=-10 #Δηλώνουμε την τιμή της τιμωρίας των εμποδίων
         self.neu=-1 #Δηλώνουμε την τιμή των ουδέτερων στοιχείων
-        gridworld = np.zeros((xlim, ylim)) #Αρχικοποίηση του πίνακα gridworld που θα δεχτεί της τιμές
+        gridworld = np.zeros((ylim, xlim)) #Αρχικοποίηση του πίνακα gridworld που θα δεχτεί της τιμές
         self.gridworld=gridworld
         gridworld += self.neu
         self.reward_state=0 #Αρχικοποίηση του στόχου
@@ -32,10 +32,10 @@ class grid():
                 cord_y = random.randint(0,ylim-1)
                 if gridworld[cord_y, cord_x] != self.pu:
                     gridworld[cord_y, cord_x] = self.re
-                    self.reward_state = self.ylim*cord_y + cord_x
+                    self.reward_state = self.xlim*cord_y + cord_x
                     break
-        location = [0, 0]
-        visualization(gridworld, location, self.re, self.pu,xlim,ylim) #μας δείχνει τον κόσμο σε αρχική κατάσταση 
+        self.location = [0, 0]
+        visualization(gridworld, self.location, self.re, self.pu,xlim,ylim) #μας δείχνει τον κόσμο σε αρχική κατάσταση 
         
     #Επιστρέφει τον agent στην αρχική του θέση (0,0)
     def reset(self):
@@ -55,13 +55,13 @@ class grid():
             if f == 0 and self.location[0] > 0:
                 self.location[0] -= 1
                 return f
-            elif f == 1 and self.location[0] < self.xlim-1:
+            elif f == 1 and self.location[0] < self.ylim-1:
                 self.location[0] += 1
                 return f
             elif f == 2 and self.location[1] > 0:
                 self.location[1] -= 1
                 return f
-            elif f == 3 and self.location[1] < self.ylim-1:
+            elif f == 3 and self.location[1] < self.xlim-1:
                 self.location[1] += 1
                 return f
               
@@ -69,11 +69,11 @@ class grid():
     def perform_move(self, f):
         if f == 0 and self.location[0] > 0:
             self.location[0] -= 1
-        elif f == 1 and self.location[0] < self.xlim-1:
+        elif f == 1 and self.location[0] < self.ylim-1:
             self.location[0] += 1
         elif f == 2 and self.location[1] > 0:
             self.location[1] -= 1
-        elif f == 3 and self.location[1] < self.ylim-1:
+        elif f == 3 and self.location[1] < self.xlim-1:
             self.location[1] += 1
 
     #Χρησιμοποιείται για να μας δείξει σε ποιο state βρίσκεται ο agent
@@ -83,6 +83,7 @@ class grid():
 
 #Function το οποίο παίρνει τα στοιχεία απο το αντικείμενο κλάσης grid και τα εμφανίζει 
 def visualization(gridworld, location, re, pu, xlim,ylim,reward=0):
+    plt.clf()
     plt.xlim(0, xlim)
     plt.ylim(0, ylim)
     plt.gca().invert_yaxis() #Βάζεθ να ξεκινάει το Υ από την πάνω πλευρά του πίνακα, για να είναι πιο ευανάγνωστο το γράφημα 
@@ -173,6 +174,8 @@ while True:
     if xdim > 2:
         break
     print("Not a valid size, please make sure it's larger than 2 and try again.")
+
+plt.ion()
 
 plt.title("Line Plot with Grid") 
 plt.xlim(0, xdim) #Θέτουμε τα όρια στην οπτικοποίηση 
